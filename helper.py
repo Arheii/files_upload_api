@@ -4,7 +4,7 @@ class ChecksumCalcStream(object):
 
     def __init__(self, stream):
         self._stream = stream
-        self._hash = hashlib.sha1()
+        self._hash = hashlib.sha224()
 
     def read(self, bytes):
         rv = self._stream.read(bytes)
