@@ -7,8 +7,7 @@ by path:  'store/hash[:2]/.
 
 import os
 import hashlib
-from helper import generate_checksum
-from flask import Flask, send_file, request, render_template, jsonify
+from flask import Flask, send_file, request, jsonify
 
 
 app = Flask(__name__)
@@ -42,10 +41,10 @@ def upload():
 @app.route("/drweb/api/storage", methods=['GET', 'DELETE'])
 def storage():
     """return or delete file by its hash"""
-
-
     file_hash = request.args.get("hash")
-    if file_hash is None:
+
+    # check hash is correct
+    if file_hash is None or not file_hash.isalnum():
         return 'need hash', 422
 
     full_path = os.path.join(UPLOAD_FOLDER, file_hash[:2], file_hash)
@@ -56,7 +55,7 @@ def storage():
 
     # Return file
     if request.method == 'GET':
-        # TODO return filename. idea - light database. attachment_filename='',
+        # TODO return filename. ideas - light database. attachment_filename='',
         return send_file(full_path, as_attachment=True)
 
     # Delete file

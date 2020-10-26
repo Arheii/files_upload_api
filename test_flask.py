@@ -49,6 +49,14 @@ def test_upload_large_file():
     hashes.append(res.json['hash'])
 
 
+def test_too_large_upload():
+    """Current max_size equal 32mb"""
+    data = {'file': (BytesIO(b'contents' * (10**7)), 'test.txt'),}
+    res = client.post("/drweb/api/storage", data=data)
+
+    assert res.status_code != 201
+
+
 def test_download_files():
     for hash_file in hashes:
         res = client.get("/drweb/api/storage", query_string={'hash':hash_file})
