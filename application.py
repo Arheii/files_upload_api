@@ -8,14 +8,13 @@ by path:  'store/hash[:2]/.
 import os
 import hashlib
 from helper import generate_checksum
-from flask import Flask, send_file, request, render_template
+from flask import Flask, send_file, request, render_template, jsonify
 
 
 app = Flask(__name__)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'store')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 
 app.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -24,13 +23,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route("/drweb/api/storage", methods=['POST'])
 def upload():
     """Upload file to server folder (with new name by hash), return hash"""
-
-    # Accessing the parses the input stream
-    # looks good, but each time got a new hash :(
-    # docs: https://flask.palletsprojects.com/en/1.1.x/patterns/requestchecksum/
-    # stream_hash = generate_checksum(request)
-    # file = request.files
-    # file_hash = stream_hash.hexdigest()
 
     file = request.files.get('file')
     if file is None:
@@ -44,7 +36,7 @@ def upload():
         os.makedirs(os.path.join(UPLOAD_FOLDER, file_hash[:2]), exist_ok=True)
         file.save(full_path)
 
-    return f'{file_hash}', 201
+    return jsonify({'hash':file_hash}), 201
 
 
 @app.route("/drweb/api/storage", methods=['GET', 'DELETE'])
@@ -71,17 +63,3 @@ def storage():
     if request.method == 'DELETE':
         os.remove(full_path)
         return '', 204
-
-
-
-
-
-
-# TODO DEL:
-@app.route("/drweb/api/upload_page", methods=['GET'])
-def for_test_upload():
-    return render_template("index.html")
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
