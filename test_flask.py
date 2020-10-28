@@ -8,24 +8,27 @@ from application import app
 from werkzeug.datastructures import FileStorage
 
 
-hashes = []
 client = app.test_client()
 
 
-def test_file_upload():
-    """Use StringIO to simulate file object"""
-    data = {'file': (BytesIO(b'contents'), 'test.txt'),}
-    res = client.post("/drweb/api/storage", data=data)
+def upload_file(size=1024):
+    """Uploads a randomly generated file to the server via POST
+    Uses StringIO to simulate file object"""
+    data = {'file': (BytesIO(os.urandom(size)), 'bytes.dat'),}
+    response = client.post("/drweb/api/storage", data=data)
+    return response
 
+
+def test_file_upload():
+    """Send 1 file via POST"""
+    res = upload_file()
     assert res.status_code == 201
-    hashes.append(res.json['hash'])
 
 
 def test_50_uploads():
-    """Random array bytes"""
+    """Send 50 files"""
     for _ in range(50):
-        data = {'file': (BytesIO(os.urandom(30)), 'bytes.dat'),}
-        res = client.post("/drweb/api/storage", data=data)
+        res = upload_file()
         assert res.status_code == 201
 
 
@@ -40,33 +43,39 @@ def test_upload_large_file():
     data = {'file': big_file,}
     res = client.post("/drweb/api/storage", data=data)
 
-    assert res.status_code == 201
-
     with open(path, "rb") as f:
         file_hash = hashlib.sha224(f.read()).hexdigest()
 
+    assert res.status_code == 201
     assert res.json['hash'] == file_hash
-    hashes.append(res.json['hash'])
 
 
 def test_too_large_upload():
-    """Current max_size equal 32mb"""
-    data = {'file': (BytesIO(b'contents' * (10**7)), 'test.txt'),}
-    res = client.post("/drweb/api/storage", data=data)
-
+    """Current max_size for file 32mb"""
+    res = upload_file(size=10**8)
     assert res.status_code != 201
 
 
-def test_download_files():
-    for hash_file in hashes:
-        res = client.get("/drweb/api/storage", query_string={'hash':hash_file})
-        assert res.status_code == 200
+def test_download_file():
+    """Upload and download back a file from server"""
+    hash_file = upload_file().json['hash']
+    res = client.get("/drweb/api/storage", query_string={'hash':hash_file})
+    assert res.status_code == 200
 
 
-def test_delete_file():
-    res = client.delete("/drweb/api/storage", query_string={'hash':hashes[0]})
+def test_del_file():
+    """Delete existing file"""
+    hash_file = upload_file().json['hash']
+    res = client.delete("/drweb/api/storage", query_string={'hash':hash_file})
     assert res.status_code == 204
 
-    res = client.get("/drweb/api/storage", query_string={'hash':hashes[0]})
+    #Checking the file is deleted
+    res = client.get("/drweb/api/storage", query_string={'hash':hash_file})
+    assert res.status_code == 404
+
+
+def test_del_nonexisting_file():
+    """Try to delete non-existing file"""
+    res = client.delete("/drweb/api/storage", query_string={'hash':'nonexistinghash'})
     assert res.status_code == 404
 
