@@ -33,9 +33,10 @@ def upload():
     if not os.path.exists(full_path):
         # Create subfolder by first two symbols and save file
         os.makedirs(os.path.join(UPLOAD_FOLDER, file_hash[:2]), exist_ok=True)
+        file.seek(0)
         file.save(full_path)
 
-    return jsonify({'hash':file_hash}), 201
+    return jsonify({'hash': file_hash}), 201
 
 
 @app.route("/drweb/api/storage", methods=['GET', 'DELETE'])
@@ -43,9 +44,9 @@ def storage():
     """return or delete file by its hash"""
     file_hash = request.args.get("hash")
 
-    # check hash is correct
+    # Hash is there and contains only correct characters
     if file_hash is None or not file_hash.isalnum():
-        return 'need hash', 422
+        return 'need correct hash', 422
 
     full_path = os.path.join(UPLOAD_FOLDER, file_hash[:2], file_hash)
 
