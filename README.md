@@ -12,4 +12,7 @@ realisation in aiohttp in progress
 
 
 ##### /aio/ #####
-- **main.py** - main file, in progress...
+- **main.py** - the main functionality is ready. learning and refactoring in process
+
+
+I would greatly appreciate for your any feedback by email or tg: [arh_74](https://t.me/Arh_74)

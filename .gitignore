@@ -1,5 +1,8 @@
-https://github.com/Arheii/files_upload_api.git
-flask_session/
-__pycache__/
-.pytest_cache/
-store/
+.gitignore
+flask/flask_session/
+flask/store/
+flask/__pycache__/
+flask/.pytest_cache/
+aio/store/
+aio/__pycache__/
+aio/.pytest_cache/

@@ -3,9 +3,10 @@ Test task for drweb vacancy.
 Api for download/upload/delete files
 each file saves by its hash instead of name,
 by path:  'store/hash[:2]/.
-
 TODO:   Project structure
         python -m aiohttp.web -H localhost -P 8080 main:main
+
+
 """
 import pathlib
 import hashlib
