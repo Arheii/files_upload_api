@@ -41,32 +41,52 @@ async def upload(request):
         with open(full_path, 'wb') as f:
             f.write(file.read())
 
-    return web.json_response({'hash': file_hash})
+    return web.json_response({'hash': file_hash}, status=201)
 
 
 @routes.get('/drweb/aiohttp/storage')
 async def storage(request):
-    """return or delete file by its hash"""
-    file_hash = request.args.get("hash")
+    """return file from FS by its hash"""
+    # TODO: refactor to middleware
+    file_hash = request.rel_url.query.get("hash")
 
     # Hash is there and contains only correct characters
     if file_hash is None or not file_hash.isalnum():
-        return 'need correct hash', 422
+        raise web.HTTPUnprocessableEntity(text='incorrect hash')
 
-    full_path = os.path.join(UPLOAD_FOLDER, file_hash[:2], file_hash)
+    full_path = UPLOAD_FOLDER / file_hash[:2] / file_hash
 
     # Check file is exist
-    if not os.path.exists(full_path):
-        return "file with this hash not found", 404
-        
-    return web.Response(text="Hello, world")
+    if not full_path.exists():
+        raise web.HTTPNotFound(text='hash not found')
+
+    # resp = web.Response
+    # resp.headers['Content-Type'] = 'application/octet-stream'
+
+    return web.FileResponse(path=full_path)
 
 
 
 @routes.delete('/drweb/aiohttp/storage')
 async def delele(request):
-    data = {'some': 'data'}
-    return web.json_response(data)
+    """Delete! file from FS by its hash"""
+    # TODO: refactor to middleware
+    file_hash = request.rel_url.query.get("hash")
+
+    # Hash is there and contains only correct characters
+    if file_hash is None or not file_hash.isalnum():
+        raise web.HTTPUnprocessableEntity(text='incorrect hash')
+
+    full_path = UPLOAD_FOLDER / file_hash[:2] / file_hash
+
+    # Check file is exist
+    if not full_path.exists():
+        raise web.HTTPNotFound(text='hash not found')
+
+    # Delete file
+    full_path.unlink(missing_ok=True)
+
+    return web.HTTPNoContent()
 
 
 @routes.get('/drweb/aiohttp')
