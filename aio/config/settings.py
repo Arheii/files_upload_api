@@ -12,6 +12,7 @@ def get_config(path):
 
     return config
 
+# it's from aiohttp documentation =\
 config = get_config(config_path)
-# print(config)
+
 

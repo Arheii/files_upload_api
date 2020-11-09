@@ -1,3 +1,4 @@
 aiohttp[speedups]
-pytest
 pyyaml
+pytest
+pytest-aiohttp

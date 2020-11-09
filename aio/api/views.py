@@ -1,14 +1,15 @@
-from aiohttp import web
 import hashlib
 import pathlib
+from aiohttp import web
 
 
 class StorageView(web.View):
+    '''incomplit crud for storage'''
     # TODO:
     # self.store_dir = self.request.config_dict['STORE_DIR']
 
     async def post(self):
-        """Upload file from post to server folder"""
+        """Upload file via post to server folder"""
         # TODO: request.post() -> request.multipart()
         data = await self.request.post()
         attach = data.get('file')
@@ -77,6 +78,7 @@ class StorageView(web.View):
         return web.HTTPNoContent()
 
 
+# TODO: can be removed
 async def upload_form(request):
     """For testing post query"""
     return web.Response(text="""
