@@ -16,7 +16,8 @@ class StorageView(web.View):
 
         if attach is None:
             raise web.HTTPBadRequest(text='no file')
-
+        
+        print(attach)
         # filename = attach.filename
         file = attach.file
 

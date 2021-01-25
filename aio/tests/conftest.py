@@ -6,7 +6,7 @@ from api.app import init_app
 
 @pytest.fixture
 async def client(aiohttp_client):
-    '''Run app in temp enviroment'''
+    '''Run app instanse in temp enviroment'''
     app = init_app()
 
     app['STORE_DIR'] = app['BASE_DIR'] / 'test_store'

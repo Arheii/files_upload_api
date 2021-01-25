@@ -9,3 +9,4 @@ aio/__pycache__/
 aio/.pytest_cache/
 aio/api/__pycache__/
 aio/config/__pycache__/
+*/__pycache__/

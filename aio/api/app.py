@@ -18,11 +18,11 @@ from .routes import setup_routes
 
 def init_app():
     '''create and prepare app for run'''
-    app = web.Application(client_max_size=config.pop('client_max_size'))
+    app = web.Application(client_max_size=config.get('client_max_size'))
     app['config'] = config
   
     app['BASE_DIR'] =  pathlib.Path(__file__).parent.parent
-    app['STORE_DIR'] = app['BASE_DIR'] / config.pop('storage_folder')
+    app['STORE_DIR'] = app['BASE_DIR'] / config.get('storage_folder')
 
     setup_routes(app)
     return app
