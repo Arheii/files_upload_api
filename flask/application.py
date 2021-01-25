@@ -1,8 +1,12 @@
 """
-Test task for drweb vacancy.
+Test task
 Api for download/upload/delete files
 each file saves by its hash instead of name,
 by path:  'store/hash[:2]/.
+
+for run:
+export FLASK_APP=application
+flask run
 """
 
 import os

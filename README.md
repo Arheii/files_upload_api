@@ -10,7 +10,7 @@ realisation in aiohttp in progress
 ---
 #### description files: ####
 ##### /flask/ #####
-- **application.py** - main file, which include all functions
+- **application.py** - main file, which include all functions. for run: 'export FLASK_APP=application $ flask run'
 - **requirments.txt** - requirments for work app
 - **test_flask.py** - all tests. for run: 'python -m pytest'
 

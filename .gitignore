@@ -1,4 +1,5 @@
 .gitignore
+drweb/
 flask/flask_session/
 flask/store/
 flask/__pycache__/
@@ -6,3 +7,6 @@ flask/.pytest_cache/
 aio/store/
 aio/__pycache__/
 aio/.pytest_cache/
+aio/api/__pycache__/
+aio/config/__pycache__/
+*/__pycache__/
