@@ -16,5 +16,20 @@ realisation in aiohttp in progress
 
 
 ##### /aio/ #####
-- **main.py** - the main functionality is ready. learning and refactoring in process
+main folder. 
+for run app:  
+*pip3 install -r requirements.txt*  
+*python -m aiohttp.web -H localhost -P 8080 api:main*
+##### /aio/api/ ##### 
+- **app.py** - initialitation
+- **routes.py**
+- **views.py** - main functionality
+
+##### /aio/config/ ##### 
+- **aip.yaml** - configs
+
+##### /aio/test/ ##### 
+- **app_test.py** - for run: *python -m pytest*
+
+
 
